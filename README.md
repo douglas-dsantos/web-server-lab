@@ -39,31 +39,25 @@ servidor web funcional, observabilidade completa com métricas e um processo de 
 
 ## 🏗️ Arquitetura
 
-\`\`\`
-┌─────────────────────────────────────────────────────────┐
-│                  VM Debian (QEMU/KVM)                   │
-│                  IP fixo: 192.168.122.100               │
-│                                                         │
-│  ┌──────────────────────────────────────────────────┐   │
-│  │              Docker — rede: lab-network          │   │
-│  │                                                  │   │
-│  │  ┌──────────┐        ┌──────────────────────┐   │   │
-│  │  │  Nginx   │        │      Prometheus       │   │   │
-│  │  │  :8080   │        │        :9090          │   │   │
-│  │  └────┬─────┘        └──────────┬───────────┘   │   │
-│  │       │                         │                │   │
-│  │  ┌────▼──────────┐   ┌──────────▼───────────┐   │   │
-│  │  │ nginx-exporter│   │      node-exporter    │   │   │
-│  │  │    :9113      │   │         :9100         │   │   │
-│  │  └───────────────┘   └──────────────────────┘   │   │
-│  │                                                  │   │
-│  │  ┌──────────────────────────────────────────┐   │   │
-│  │  │              Grafana :3000               │   │   │
-│  │  │     consulta Prometheus via PromQL       │   │   │
-│  │  └──────────────────────────────────────────┘   │   │
-│  └──────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────┘
-\`\`\`
+```
+Host (Ubuntu)
+└── VM Debian via QEMU/KVM (IP: <IP-DA-VM>)
+    └── Docker (rede: lab-network)
+        ├── nginx              :8080  → serve index.html
+        ├── nginx-exporter     :9113  → traduz métricas do Nginx
+        ├── node-exporter      :9100  → métricas do sistema (CPU, RAM, disco)
+        ├── prometheus         :9090  → coleta /metrics dos exporters a cada 15s
+        └── grafana            :3000  → visualiza dados do Prometheus
+```
+
+**Fluxo de dados:**
+
+```
+node-exporter  :9100  ──┐
+nginx-exporter :9113  ──┼──► Prometheus armazena no TSDB
+                        │
+                        └──► Grafana consulta via PromQL e exibe dashboards
+```
 
 ---
 
@@ -97,11 +91,15 @@ docker compose ps
 
 ### 5. Acessar os serviços
 
-| Serviço | Endereço | Credenciais |
-|---|---|---|
-| Nginx | http://192.168.122.100:8080 | — |
-| Prometheus | http://192.168.122.100:9090 | — |
-| Grafana | http://192.168.122.100:3000 | admin / admin |
+### 5. Acessar os serviços
+
+| Serviço    | Endereço                  | Credenciais   |
+|------------|---------------------------|---------------|
+| Nginx      | `http://SEU-IP:8080`      | —             |
+| Prometheus | `http://SEU-IP:9090`      | —             |
+| Grafana    | `http://SEU-IP:3000`      | admin / admin |
+
+> **Nota:** substitua `SEU-IP` pelo IP da sua VM. Use `ip a` dentro da VM para descobrir.
 
 ### 6. Importar dashboard no Grafana
 
