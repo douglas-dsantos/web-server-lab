@@ -41,7 +41,7 @@ servidor web funcional, observabilidade completa com métricas e um processo de 
 
 ```
 Host (Ubuntu)
-└── VM Debian via QEMU/KVM (IP: <IP-DA-VM>)
+└── VM Debian via QEMU/KVM
     └── Docker (rede: lab-network)
         ├── nginx              :8080  → serve index.html
         ├── nginx-exporter     :9113  → traduz métricas do Nginx
@@ -49,6 +49,8 @@ Host (Ubuntu)
         ├── prometheus         :9090  → coleta /metrics dos exporters a cada 15s
         └── grafana            :3000  → visualiza dados do Prometheus
 ```
+
+---
 
 **Fluxo de dados:**
 
@@ -58,8 +60,6 @@ nginx-exporter :9113  ──┼──► Prometheus armazena no TSDB
                         │
                         └──► Grafana consulta via PromQL e exibe dashboards
 ```
-
----
 
 ## 🚀 Como reproduzir
 
@@ -88,8 +88,6 @@ docker compose up -d
 \`\`\`bash
 docker compose ps
 \`\`\`
-
-### 5. Acessar os serviços
 
 ### 5. Acessar os serviços
 
@@ -144,23 +142,24 @@ docker compose down -v
 
 ## 📁 Estrutura do repositório
 
-\`\`\`
+
+```text
 web-server-lab/
-├── docker-compose.yml
+├── docker-compose.yml          # Orquestração dos containers
 ├── nginx/
-│   ├── Dockerfile
-│   ├── nginx.conf
-│   └── index.html
+│   ├── Dockerfile             # Imagem customizada do Nginx
+│   ├── nginx.conf             # Configuração do servidor web
+│   └── index.html             # Página de teste
 ├── prometheus/
-│   └── prometheus.yml
+│   └── prometheus.yml         # Configuração de coleta de métricas
 ├── grafana/
 │   └── provisioning/
 │       └── datasources/
-│           └── prometheus.yml
+│           └── prometheus.yml # Data Source configurado automaticamente
 └── docs/
     ├── grafana-dashboard.png
     └── prometheus-targets.png
-\`\`\`
+```
 
 ---
 
