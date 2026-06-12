@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roadmap DevOps — Douglas</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap');
+
+  :root {
+    --bg: #0a0e17;
+    --surface: #111827;
+    --surface2: #1a2235;
+    --border: #1f2d44;
+    --accent: #00d4ff;
+    --accent2: #7c3aed;
+    --accent3: #10b981;
+    --accent4: #f59e0b;
+    --accent5: #ef4444;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --phase1: #00d4ff;
+    --phase2: #7c3aed;
+    --phase3: #10b981;
+    --phase4: #f59e0b;
+    --phase5: #ef4444;
+    --phase6: #ec4899;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* HEADER */
+  header {
+    text-align: center;
+    padding: 3rem 0 2.5rem;
+    position: relative;
+  }
+
+  .header-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.1s;
+  }
+
+  header h1 {
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 0.75rem;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.2s;
+  }
+
+  header h1 span {
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .header-sub {
+    color: var(--muted);
+    font-size: 1rem;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.3s;
+  }
+
+  /* STATS */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin: 2.5rem 0;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.4s;
+  }
+
+  .stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem;
+    text-align: center;
+  }
+
+  .stat-num {
+    font-size: 1.8rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-top: 0.35rem;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.05em;
+  }
+
+  /* FASE NAVIGATION */
+  .phase-nav {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.5s;
+  }
+
+  .phase-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    padding: 0.4rem 0.9rem;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.05em;
+  }
+
+  .phase-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .phase-btn.active { background: var(--accent); color: var(--bg); border-color: var(--accent); font-weight: 700; }
+
+  /* PHASE CARD */
+  .phase-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+    transition: border-color 0.3s;
+    opacity: 0;
+    animation: fadeUp 0.5s ease forwards;
+  }
+
+  .phase-card:nth-child(1) { animation-delay: 0.1s; }
+  .phase-card:nth-child(2) { animation-delay: 0.2s; }
+  .phase-card:nth-child(3) { animation-delay: 0.3s; }
+  .phase-card:nth-child(4) { animation-delay: 0.4s; }
+  .phase-card:nth-child(5) { animation-delay: 0.5s; }
+  .phase-card:nth-child(6) { animation-delay: 0.6s; }
+
+  .phase-card:hover { border-color: var(--phase-color, var(--accent)); }
+
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .phase-num {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+  }
+
+  .phase-title-block { flex: 1; }
+
+  .phase-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 0.2rem;
+  }
+
+  .phase-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    display: flex;
+    gap: 1rem;
+  }
+
+  .phase-toggle {
+    color: var(--muted);
+    font-size: 1.2rem;
+    transition: transform 0.3s;
+    flex-shrink: 0;
+  }
+
+  .phase-card.open .phase-toggle { transform: rotate(180deg); }
+
+  .phase-body {
+    display: none;
+    padding: 0 1.5rem 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .phase-card.open .phase-body { display: block; }
+
+  /* SECTIONS dentro da fase */
+  .section-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 1.25rem 0 0.75rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* CURSO ITEM */
+  .course-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    background: var(--surface2);
+    border: 1px solid transparent;
+    transition: border-color 0.2s;
+  }
+
+  .course-item:hover { border-color: var(--border); }
+
+  .course-icon {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-top: 6px;
+    flex-shrink: 0;
+  }
+
+  .course-content { flex: 1; }
+
+  .course-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .course-desc {
+    font-size: 0.78rem;
+    color: var(--muted);
+    line-height: 1.5;
+    margin-bottom: 0.4rem;
+  }
+
+  .course-tags {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  .tag.free { border-color: var(--accent3); color: var(--accent3); }
+  .tag.paid { border-color: var(--accent4); color: var(--accent4); }
+  .tag.cert { border-color: var(--accent2); color: var(--accent2); }
+
+  /* PROJETO ITEM */
+  .project-item {
+    padding: 0.75rem;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    background: var(--surface2);
+    border-left: 3px solid var(--accent3);
+  }
+
+  .project-name {
+    font-weight: 600;
+    font-size: 0.88rem;
+    margin-bottom: 0.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .project-name::before {
+    content: '⬡';
+    color: var(--accent3);
+    font-size: 0.8rem;
+  }
+
+  .project-desc {
+    font-size: 0.78rem;
+    color: var(--muted);
+    line-height: 1.5;
+    margin-bottom: 0.4rem;
+  }
+
+  .project-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--accent3);
+  }
+
+  /* CERT ITEM */
+  .cert-item {
+    padding: 0.9rem;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    background: var(--surface2);
+    border: 1px solid var(--accent2);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .cert-star { color: var(--accent4); font-size: 1.2rem; flex-shrink: 0; }
+
+  .cert-name {
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .cert-desc {
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  /* UPGRADE ITEM */
+  .upgrade-item {
+    padding: 0.75rem;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    background: var(--surface2);
+    border-left: 3px solid var(--accent2);
+  }
+
+  .upgrade-name {
+    font-weight: 600;
+    font-size: 0.88rem;
+    margin-bottom: 0.25rem;
+    color: var(--accent2);
+  }
+
+  .upgrade-desc {
+    font-size: 0.78rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* SALARY */
+  .salary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+  }
+
+  .salary-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .salary-level {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+
+  .salary-value {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--accent3);
+    margin-bottom: 0.3rem;
+  }
+
+  .salary-desc {
+    font-size: 0.7rem;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  /* CRONOGRAMA */
+  .cronograma-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-top: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.8s;
+  }
+
+  .crono-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+  }
+
+  .crono-sub {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+  }
+
+  .controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .control-group label {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  .control-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  input[type=range] {
+    flex: 1;
+    -webkit-appearance: none;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    outline: none;
+  }
+
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+  }
+
+  .range-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--accent);
+    font-weight: 700;
+    min-width: 45px;
+    text-align: right;
+  }
+
+  .crono-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .crono-stat {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .crono-stat-num {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .crono-stat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    margin-top: 0.3rem;
+  }
+
+  /* TIMELINE BARS */
+  .timeline { margin-top: 1.5rem; }
+
+  .tl-months {
+    display: flex;
+    margin-bottom: 0.75rem;
+    padding-left: 140px;
+  }
+
+  .tl-month {
+    flex: 1;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+  }
+
+  .tl-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    min-height: 32px;
+  }
+
+  .tl-label {
+    width: 140px;
+    font-size: 0.75rem;
+    color: var(--text);
+    padding-right: 0.75rem;
+    flex-shrink: 0;
+    line-height: 1.2;
+  }
+
+  .tl-track {
+    flex: 1;
+    height: 28px;
+    background: var(--surface2);
+    border-radius: 6px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .tl-bar {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: var(--bg);
+    transition: width 0.5s ease, left 0.5s ease;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .cert-marker {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.9rem;
+    z-index: 2;
+    transition: left 0.5s ease;
+  }
+
+  /* ROTINA */
+  .rotina-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .rotina-day {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.75rem 0.5rem;
+    text-align: center;
+  }
+
+  .rotina-day.descanso {
+    border-color: var(--accent5);
+    opacity: 0.5;
+  }
+
+  .rotina-day-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+  }
+
+  .rotina-item {
+    font-size: 0.68rem;
+    padding: 0.2rem 0.3rem;
+    border-radius: 4px;
+    margin-bottom: 0.3rem;
+    font-weight: 600;
+  }
+
+  .rotina-teoria { background: rgba(0,212,255,0.15); color: var(--accent); }
+  .rotina-lab { background: rgba(16,185,129,0.15); color: var(--accent3); }
+  .rotina-revisao { background: rgba(124,58,237,0.15); color: var(--accent2); }
+  .rotina-descanso { background: rgba(239,68,68,0.1); color: var(--accent5); }
+
+  /* REGRAS */
+  .rules {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+
+  .rule-item {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.75rem;
+  }
+
+  .rule-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 2px; }
+
+  .rule-text {
+    font-size: 0.78rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .rule-text strong { color: var(--text); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .salary-grid { grid-template-columns: 1fr; }
+    .crono-summary { grid-template-columns: 1fr 1fr; }
+    .controls { grid-template-columns: 1fr; }
+    .rotina-grid { grid-template-columns: repeat(4, 1fr); }
+    .rules { grid-template-columns: 1fr; }
+    .tl-label { width: 100px; font-size: 0.65rem; }
+  }
+
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 1.5rem 0;
+  }
+
+  .phase-card[data-phase="1"] { --phase-color: var(--phase1); }
+  .phase-card[data-phase="2"] { --phase-color: var(--phase2); }
+  .phase-card[data-phase="3"] { --phase-color: var(--phase3); }
+  .phase-card[data-phase="4"] { --phase-color: var(--phase4); }
+  .phase-card[data-phase="5"] { --phase-color: var(--phase5); }
+  .phase-card[data-phase="6"] { --phase-color: var(--phase6); }
+
+  .section-label {
+    margin-top: 1.5rem;
+    margin-bottom: 0.3rem;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="header-tag">// roadmap personalizado</div>
+    <h1>Sua jornada para <span>DevOps</span></h1>
+    <p class="header-sub">Roadmap completo com cursos gratuitos, projetos práticos, certificações e cronograma ajustável.</p>
+  </header>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-num">6</div><div class="stat-label">fases</div></div>
+    <div class="stat"><div class="stat-num">~540h</div><div class="stat-label">estudo total</div></div>
+    <div class="stat"><div class="stat-num">3</div><div class="stat-label">certificações</div></div>
+    <div class="stat"><div class="stat-num">8–12m</div><div class="stat-label">empregabilidade</div></div>
+  </div>
+
+  <div class="phase-nav">
+    <button class="phase-btn active" onclick="filterPhase('all')">Todas</button>
+    <button class="phase-btn" onclick="filterPhase('1')">F1 · Linux</button>
+    <button class="phase-btn" onclick="filterPhase('2')">F2 · Python & Git</button>
+    <button class="phase-btn" onclick="filterPhase('3')">F3 · Docker</button>
+    <button class="phase-btn" onclick="filterPhase('4')">F4 · AWS & Cloud</button>
+    <button class="phase-btn" onclick="filterPhase('5')">F5 · DevOps Pro</button>
+    <button class="phase-btn" onclick="filterPhase('6')">F6 · Upgrades</button>
+  </div>
+
+  <div id="phases-container">
+
+    <!-- FASE 1 -->
+    <div class="phase-card open" data-phase="1">
+      <div class="phase-header" onclick="togglePhase(this)">
+        <div class="phase-num" style="background:rgba(0,212,255,0.15);color:var(--phase1);">01</div>
+        <div class="phase-title-block">
+          <div class="phase-title">Linux & Terminal</div>
+          <div class="phase-meta"><span>⏱ 2 meses</span><span>📍 Agora — durante o ADS</span><span>🎯 Base obrigatória</span></div>
+        </div>
+        <div class="phase-toggle">▼</div>
+      </div>
+      <div class="phase-body">
+        <div class="section-title">Cursos</div>
+        <div class="course-item">
+          <div class="course-icon" style="background:var(--accent3)"></div>
+          <div class="course-content">
+            <div class="course-name">LinuxTips Essentials — Linux</div>
+            <div class="course-desc">Fundamentos de Linux com o Jeferson Fernando, mesmo instrutor da certificação paga. Terminal, permissões, processos, scripts de shell. Gratuito na plataforma.</div>
+            <div class="course-tags"><span class="tag free">gratuito</span><span class="tag">linuxtips.io</span></div>
+          </div>
+        </div>
+        <div class="course-item">
+          <div class="course-icon" style="background:var(--accent4)"></div>
+          <div class="course-content">
+            <div class="course-name">YouTube — Canal LINUXtips</div>
+            <div class="course-desc">Centenas de horas gratuitas no YouTube. Acompanha o canal e assiste as playlists de Linux para iniciantes. Complementa os Essentials.</div>
+            <div class="course-tags"><span class="tag free">gratuito</span><span class="tag">youtube.com/@linuxtips</span></div>
+          </div>
+        </div>
+
+        <div class="section-title">Projeto Prático</div>
+        <div class="project-item">
+          <div class="project-name">Lab pessoal no VirtualBox</div>
+          <div class="project-desc">Instala Ubuntu 22.04 em uma VM. Pratica no terminal todo dia: criação de pastas, usuários, permissões, gerenciamento de processos. Documenta cada comando novo num README.</div>
+          <div class="project-label">GitHub: linux-homelab</div>
+        </div>
+        <div class="project-item">
+          <div class="project-name">Servidor web local (Apache/Nginx)</div>
+          <div class="project-desc">Configura e sobe um servidor HTTP na VM. Serve uma página HTML simples. Ajusta permissões de arquivos e analisa logs de acesso. Primeiro projeto real no portfólio.</div>
+          <div class="project-label">GitHub: web-server-lab</div>
+        </div>
+
+        <div class="section-title">Meta da fase</div>
+        <div class="course-item">
+          <div class="course-icon" style="background:var(--accent)"></div>
+          <div class="course-content">
+            <div class="course-name">Navegar no terminal com confiança</div>
+            <div class="course-desc">Sem depender do Google para comandos básicos. Conseguir criar, mover, editar e deletar arquivos; gerenciar permissões e processos; configurar um servidor simples do zero.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FASE 2 -->
+    <div class="phase-card" data-phase="2">
+      <div class="phase-header" onclick="togglePhase(this)">
+        <div class="phase-num" style="background:rgba(124,58,237,0.15);color:var(--phase2);">02</div>
+        <div class="phase-title-block">
+          <div class="phase-title">Python Básico & Git</div>
+          <div class="phase-meta"><span>⏱ 2 meses</span><span>📍 Meses 3–4</span><span>🎯 Automação e versionamento</span></div>
+        </div>
+        <div class="phase-toggle">▼</div>
+      </div>
+      <div class="phase-body">
+        <div class="section-title">Cursos</div>
+        <div class="course-item">
+          <div class="course-icon" style="background:var(--accent3)"></div>
+          <div class="course-content">
+            <div class="course-name">CS50P — Introdução ao Python (Harvard)</div>
+            <div class="course-desc">Lógica de programação em Python. Totalmente gratuito. Não é Python avançado — é raciocínio lógico aplicado. Ideal para automação em DevOps. Sem necessidade de experiência anterior.</div>
+            <div class="course-tags"><span class="tag free">gratuito</span><span class="tag">cs50.harvard.edu/python</span></div>
+          </div>
+        </div>
+        <div class="course-item">
+          <div class="course-icon" style="background:var(--accent3)"></div>
+          <div class="course-content">
+            <div class="course-name">GitHub Skills — Git e GitHub</div>
+            <div class="course-desc">Curso interativo oficial do GitHub. Aprende versionamento na prática, direto no repositório. Cobre branches, pull requests, merge e fluxo de trabalho profissional.</div>
+            <div class="course-tags"><span class="tag free">gratuito</span><span class="tag">github.com/skills</span></div>
+          </div>
+        </div>
+
+        <div class="section-title">Projetos Práticos</div>
+        <div class="project-item">
+          <div class="project-name">Scripts de automação com Python</div>
+          <div class="project-desc">Escreve scripts que automatizam tarefas do dia a dia: renomear arquivos em lote, organizar pastas, fazer backup de diretórios. Tudo versionado no GitHub desde o primeiro commit.</div>
+          <div class="project-label">GitHub: python-automation-scripts</div>
+        </div>
+        <div class="project-item">
+          <div class="project-name">Portfólio no GitHub — início</div>
+          <div class="project-desc">Todos os exercícios do CS50P e do lab Linux vão para o GitHub. README bem escrito em cada repositório. Histórico de commits consistente já é portfólio.</div>
+          <div class="project-label">GitHub: profile + repositórios organizados</div>
+        </div>
+
+        <div class="section-title">Redes (paralelo)</div>
+        <div class="course-item">
+          <div class="course-icon" style="background:var(--accent3)"></div>
+          <div class="course-content">
+            <div class="course-name">Cisco Networking Academy — Fundamentos</div>
+            <div class="course-desc">TCP/IP, DNS, HTTP, firewall e VPN. Módulos introdutórios gratuitos. Não precisa terminar tudo — foca nos primeiros módulos que cobrem o essencial para DevOps.</div>
+            <div class="course-tags"><span class="tag free">gratuito</span><span class="tag">netacad.com</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FASE 3 -->
+    <div class="phase-card" data-phase="3">
+      <div class="phase-header" onclick="togglePhase(this)">
+        <div class="phase-num" style="background:rgba(16,185,129,0.15);color:var(--phase3);">03</div>
+        <div class="phase-title-block">
+          <div class="phase-title">Docker & Containers</div>
+          <div class="phase-meta"><span>⏱ 2 meses</span><span>📍 Meses 5–6</span><span>🎯 Coração do DevOps moderno</span></div>
+        </div>
+        <div class="phase-toggle">▼</div>
+      </div>
+      <div class="phase-body">
+        <div class="section-title">Cursos</div>
+        <div class="course-item">
+          <div class="course-icon" style="background:var(--accent3)"></div>
+          <div class="course-content">
+            <div class="course-name">LinuxTips Essentials — Docker</div>
+            <div class="course-desc">Módulo de Docker gratuito da LinuxTips. Com a base de Linux que você terá, esse conteúdo vai fazer muito sentido. Cobre criação de imagens, containers, volumes e redes.</div>
+            <div class="course-tags"><span class="tag free">gratuito</span><span class="tag">linuxtips.io</span></div>
+          </div>
+        </div>
+        <div class="course-item">
+          <div class="course-icon" style="background:var(--accent4)"></div>
+          <div class="course-content">
+            <div class="course-name">Play with Docker — Labs online</div>
+            <div class="course-desc">Ambiente online gratuito da Docker Inc. para praticar sem precisar instalar nada localmente. Ótimo para experimentar antes de configurar no seu próprio ambiente.</div>
+            <div class="course-tags"><span class="tag free">gratuito</span><span class="tag">labs.play-with-docker.com</span></div>
+          </div>
+        </div>
+
+        <div class="section-title">Projetos Práticos</div>
+        <div class="project-item">
+          <div class="project-name">Containerizar uma aplicação Python</div>
+          <div class="project-desc">Pega um dos seus scripts Python da fase anterior e cria um Dockerfile para ele. Faz build da imagem, roda o container, testa. Documenta o processo no README.</div>
+          <div class="project-label">GitHub: python-docker-app</div>
+        </div>
+        <div class="project-item">
+          <div class="project-name">Docker Compose com múltiplos serviços</div>
+          <div class="project-desc">Sobe um ambiente com app + banco de dados usando Docker Compose. Um exemplo clássico é uma API simples + PostgreSQL. Esse projeto já simula ambiente de produção real.</div>
+          <div class="project-label">GitHub: docker-compose-lab</div>
+        </div>
+
+        <div class="section-title">Meta da fase</div>
+        <div class="course-item">
+          <div class="course-icon" style="background:var(--accent3)"></div>
+          <div class="course-content">
+            <div class="course-name">Criar e gerenciar containers sem tutorial</div>
+            <div class="course-desc">Conseguir criar imagens, subir containers, configurar redes e volumes, e usar Docker Compose para orquestrar múltiplos serviços sem precisar copiar comandos da internet.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FASE 4 -->
+    <div class="phase-card" data-phase="4">
+      <div class="phase-header" onclick="togglePhase(this)">
+        <div class="phase-num" style="background:rgba(245,158,11,0.15);color:var(--phase4);">04</div>
+        <div class="phase-title-block">
+          <div class="phase-title">AWS & Cloud Foundations</div>
+          <div class="phase-meta"><span>⏱ 2 meses</span><span>📍 Meses 7–8</span><span>🎯 Primeira certificação</span></div>
+        </div>
+        <div class="phase-toggle">▼</div>
+      </div>
+      <div class="phase-body">
+        <div class="section-title">Cursos</div>
+        <div class="course-item">
+          <div class="course-icon" style="background:var(--accent3)"></div>
+          <div class="course-content">
+            <div class="course-name">AWS Cloud Practitioner Essentials</div>
+            <div class="course-desc">Curso oficial gratuito da Amazon no AWS Skill Builder. Cobre todos os conceitos do exame CLF-C02: serviços, segurança, preços e arquitetura básica. Suficiente para a prova com estudo complementar.</div>
+            <div class="course-tags"><span class="tag free">gratuito</span><span class="tag">skillbuilder.aws</span></div>
+          </div>
+        </div>
+        <div class="course-item">
+          <div class="course-icon" style="background:var(--accent4)"></div>
+          <div class="course-content">
+            <div class="course-name">Simulados — Whizlabs ou Udemy</div>
+            <div class="course-desc">Antes de agendar a prova, faz simulados. Pacotes no Udemy custam ~R$ 30 em promoção. Taxa de aprovação sobe muito com essa preparação. Não pula essa etapa.</div>
+            <div class="course-tags"><span class="tag paid">~R$ 30</span><span class="tag">udemy.com</span></div>
+          </div>
+        </div>
+
+        <div class="section-title">Projetos Práticos</div>
+        <div class="project-item">
+          <div class="project-name">Site estático no S3 + CloudFront + HTTPS</div>
+          <div class="project-desc">Sobe seu portfólio pessoal no S3. Configura CloudFront como CDN. Adiciona certificado SSL via ACM. Custo próximo de zero no free tier da AWS. Resultado: portfólio online real.</div>
+          <div class="project-label">GitHub: portfolio-aws</div>
+        </div>
+        <div class="project-item">
+          <div class="project-name">IAM com princípio de least privilege</div>
+          <div class="project-desc">Cria usuários, grupos e políticas customizadas no IAM. Habilita MFA em todas as contas. Documenta as decisões de cada política. Demonstra pensamento de segurança no portfólio.</div>
+          <div class="project-label">GitHub: iam-policies-lab</div>
+        </div>
+
+        <div class="section-title">Certificação</div>
+        <div class="cert-item">
+          <div class="cert-star">★</div>
+          <div>
+            <div class="cert-name">AWS Certified Cloud Practitioner (CLF-C02)</div>
+            <div class="cert-desc">Prova online, ~$100 (~R$ 550). Primeira certificação oficial no currículo. Reconhecida globalmente. Valida que você entende cloud de verdade.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FASE 5 -->
+    <div class="phase-card" data-phase="5">
+      <div class="phase-header" onclick="togglePhase(this)">
+        <div class="phase-num" style="background:rgba(239,68,68,0.15);color:var(--phase5);">05</div>
+        <div class="phase-title-block">
+          <div class="phase-title">DevOps Professional</div>
+          <div class="phase-meta"><span>⏱ 12 meses</span><span>📍 A partir do mês 9</span><span>🎯 Empregabilidade júnior</span></div>
+        </div>
+        <div class="phase-toggle">▼</div>
+      </div>
+      <div class="phase-body">
+        <div class="section-title">Treinamento Principal</div>
+        <div class="course-item">
+          <div class="course-icon" style="background:var(--accent5)"></div>
+          <div class="course-content">
+            <div class="course-name">Certificação DevOps Professional — LINUXtips</div>
+            <div class="course-desc">12 meses, +300h. Instrutores de mercado real: Jeferson Fernando (fundador LinuxTips), Camilla Martins (SRE Storyblok), Rafael Gomes (DevOps Tech Lead). Cobre Terraform, AWS avançado, Kubernetes, GitHub Actions, Prometheus, Grafana e EKS. Em português, com aulas ao vivo e comunidade no Discord. O melhor investimento identificado para DevOps no Brasil.</div>
+            <div class="course-tags"><span class="tag paid">investimento</span><span class="tag cert">linuxtips.io</span><span class="tag">português</span></div>
+          </div>
+        </div>
+
+        <div class="section-title">Projetos Práticos da Fase</div>
+        <div class="project-item">
+          <div class="project-name">Pipeline CI/CD completo com GitHub Actions</div>
+          <div class="project-desc">Cria um pipeline que faz build, testa e faz deploy automático de uma aplicação containerizada na AWS. Esse projeto sozinho já impressiona recrutadores.</div>
+          <div class="project-label">GitHub: cicd-pipeline-aws</div>
+        </div>
+        <div class="project-item">
+          <div class="project-name">Infraestrutura como código com Terraform</div>
+          <div class="project-desc">Provisiona uma VPC com subnets, security groups e instâncias EC2 usando Terraform. Documenta cada decisão. Demonstra que você pensa em infra como código, não como cliques no console.</div>
+          <div class="project-label">GitHub: terraform-aws-infra</div>
+        </div>
+        <div class="project-item">
+          <div class="project-name">Cluster Kubernetes com monitoramento</div>
+          <div class="project-desc">Sobe um cluster Kubernetes (EKS ou local com kind), faz deploy de uma aplicação e configura Prometheus + Grafana para monitoramento. Dashboard funcional de verdade.</div>
+          <div class="project-label">GitHub: k8s-monitoring-lab</div>
+        </div>
+
+        <div class="section-title">Certificações da Fase</div>
+        <div class="cert-item">
+          <div class="cert-star">★</div>
+          <div>
+            <div class="cert-name">HashiCorp Terraform Associate</div>
+            <div class="cert-desc">Certificação reconhecida de IaC. ~$70 (~R$ 380). Terraform é a ferramenta padrão do mercado para infraestrutura como código. Muito valorizada em ofertas de emprego.</div>
+          </div>
+        </div>
+        <div class="cert-item">
+          <div class="cert-star">★</div>
+          <div>
+            <div class="cert-name">CKA — Certified Kubernetes Administrator</div>
+            <div class="cert-desc">A certificação de Kubernetes mais respeitada do mercado. ~$395 (~R$ 2.100). Quem tem CKA no currículo raramente fica desempregado em DevOps. Meta de longo prazo desta fase.</div>
+          </div>
+        </div>
+
+        <div class="section-title">Expectativa Salarial</div>
+        <div class="salary-grid">
+          <div class="salary-card">
+            <div class="salary-level">Júnior</div>
+            <div class="salary-value">R$ 3–5k/mês</div>
+            <div class="salary-desc">Após fases 1–4. Primeiro emprego em TI ainda durante o aprendizado.</div>
+          </div>
+          <div class="salary-card">
+            <div class="salary-level">Pleno</div>
+            <div class="salary-value">R$ 8–15k/mês</div>
+            <div class="salary-desc">DevOps Engineer. Após fase 5 completa + 1–2 anos de experiência.</div>
+          </div>
+          <div class="salary-card">
+            <div class="salary-level">Sênior</div>
+            <div class="salary-value">R$ 18–30k+/mês</div>
+            <div class="salary-desc">DevOps Architect, Staff Engineer. Com CKA e experiência sólida.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FASE 6 -->
+    <div class="phase-card" data-phase="6">
+      <div class="phase-header" onclick="togglePhase(this)">
+        <div class="phase-num" style="background:rgba(236,72,153,0.15);color:var(--phase6);">06</div>
+        <div class="phase-title-block">
+          <div class="phase-title">Upgrades & Especialização</div>
+          <div class="phase-meta"><span>⏱ Contínuo</span><span>📍 Após emprego na área</span><span>🎯 Crescimento de carreira</span></div>
+        </div>
+        <div class="phase-toggle">▼</div>
+      </div>
+      <div class="phase-body">
+        <div class="section-title">Caminhos possíveis</div>
+        <div class="upgrade-item">
+          <div class="upgrade-name">Platform Engineering</div>
+          <div class="upgrade-desc">Construir plataformas internas que aceleram times de desenvolvimento. Próximo passo natural após DevOps sólido. Alta demanda em empresas de médio e grande porte.</div>
+        </div>
+        <div class="upgrade-item">
+          <div class="upgrade-name">Site Reliability Engineering (SRE)</div>
+          <div class="upgrade-desc">Foco em confiabilidade, uptime e observabilidade. Carreira bem estabelecida em bancos, fintechs e big techs como Nubank, iFood e PicPay. Salários de R$ 18–30k+.</div>
+        </div>
+        <div class="upgrade-item">
+          <div class="upgrade-name">Multi-cloud: Azure AZ-104 + GCP Associate</div>
+          <div class="upgrade-desc">Após dominar AWS, adicionar Azure e GCP expande muito as oportunidades. Profissionais multi-cloud são os mais bem pagos da área de infraestrutura cloud.</div>
+        </div>
+        <div class="upgrade-item">
+          <div class="upgrade-name">DevSecOps</div>
+          <div class="upgrade-desc">Integração de segurança no pipeline DevOps. Perfil raríssimo e muito disputado. Combina o que você aprendeu em DevOps com princípios de segurança de aplicações.</div>
+        </div>
+
+        <div class="section-title">Comunidade — desde o dia 1</div>
+        <div class="course-item">
+          <div class="course-icon" style="background:var(--accent2)"></div>
+          <div class="course-content">
+            <div class="course-name">Discord da LinuxTips</div>
+            <div class="course-desc">Entra no Discord da LinuxTips desde o primeiro dia de estudo, mesmo sem ter dúvidas ainda. Só ler o que os outros perguntam já ensina muito. Networking que abre portas para o primeiro emprego.</div>
+            <div class="course-tags"><span class="tag free">gratuito</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end phases-container -->
+
+  <!-- CRONOGRAMA -->
+  <div class="cronograma-section">
+    <div class="crono-title">Cronograma personalizado</div>
+    <div class="crono-sub">Ajuste as horas e dias por semana para ver como o cronograma muda.</div>
+
+    <div class="controls">
+      <div class="control-group">
+        <label>Horas por dia</label>
+        <div class="control-row">
+          <input type="range" id="horasRange" min="1" max="6" value="3" oninput="updateCrono()">
+          <div class="range-val" id="horasVal">3h</div>
+        </div>
+      </div>
+      <div class="control-group">
+        <label>Dias por semana</label>
+        <div class="control-row">
+          <input type="range" id="diasRange" min="3" max="7" value="6" oninput="updateCrono()">
+          <div class="range-val" id="diasVal">6 dias</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="crono-summary">
+      <div class="crono-stat">
+        <div class="crono-stat-num" id="totalMeses">8</div>
+        <div class="crono-stat-label">meses até fase 5</div>
+      </div>
+      <div class="crono-stat">
+        <div class="crono-stat-num" id="totalHoras">540h</div>
+        <div class="crono-stat-label">carga total estimada</div>
+      </div>
+      <div class="crono-stat">
+        <div class="crono-stat-num" id="cert1Mes">mês 4</div>
+        <div class="crono-stat-label">1ª certificação (AWS)</div>
+      </div>
+    </div>
+
+    <div class="timeline" id="timeline">
+      <!-- gerado pelo JS -->
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="crono-title" style="font-size:1.1rem;margin-bottom:0.3rem">Rotina semanal sugerida</div>
+    <div class="crono-sub">Com 3h/dia e 6 dias/semana</div>
+
+    <div class="rotina-grid">
+      <div class="rotina-day">
+        <div class="rotina-day-name">Seg</div>
+        <div class="rotina-item rotina-teoria">Teoria 2h</div>
+        <div class="rotina-item rotina-revisao">Revisão 1h</div>
+      </div>
+      <div class="rotina-day">
+        <div class="rotina-day-name">Ter</div>
+        <div class="rotina-item rotina-teoria">Teoria 1h</div>
+        <div class="rotina-item rotina-lab">Lab 2h</div>
+      </div>
+      <div class="rotina-day">
+        <div class="rotina-day-name">Qua</div>
+        <div class="rotina-item rotina-lab">Lab 2h</div>
+        <div class="rotina-item rotina-revisao">Revisão 1h</div>
+      </div>
+      <div class="rotina-day">
+        <div class="rotina-day-name">Qui</div>
+        <div class="rotina-item rotina-teoria">Teoria 2h</div>
+        <div class="rotina-item rotina-revisao">Revisão 1h</div>
+      </div>
+      <div class="rotina-day">
+        <div class="rotina-day-name">Sex</div>
+        <div class="rotina-item rotina-teoria">Teoria 1h</div>
+        <div class="rotina-item rotina-lab">Lab 2h</div>
+      </div>
+      <div class="rotina-day">
+        <div class="rotina-day-name">Sáb</div>
+        <div class="rotina-item rotina-lab">Lab 2h</div>
+        <div class="rotina-item rotina-revisao">Projeto 1h</div>
+      </div>
+      <div class="rotina-day descanso">
+        <div class="rotina-day-name">Dom</div>
+        <div class="rotina-item rotina-descanso">Descanso</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="crono-title" style="font-size:1.1rem;margin-bottom:1rem">Regras que fazem o plano funcionar</div>
+    <div class="rules">
+      <div class="rule-item">
+        <div class="rule-icon">⌨️</div>
+        <div class="rule-text"><strong>Nunca pula a prática.</strong> Ver aula sem reproduzir no terminal não conta. Todo conceito novo vai para o lab.</div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-icon">📝</div>
+        <div class="rule-text"><strong>Anota tudo.</strong> Comandos novos, erros cometidos, como resolveu. Vira referência futura e mostra sua evolução.</div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-icon">🐙</div>
+        <div class="rule-text"><strong>GitHub desde o dia 1.</strong> Todo exercício, todo script, todo lab vai pro GitHub. Histórico de commits consistente já é portfólio.</div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-icon">🏁</div>
+        <div class="rule-text"><strong>Não muda de plano.</strong> A maior armadilha em TI é pular de curso em curso sem terminar. Segue a sequência.</div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-icon">💬</div>
+        <div class="rule-text"><strong>Comunidade desde cedo.</strong> Entra no Discord da LinuxTips agora. Ler dúvidas dos outros já ensina muito.</div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-icon">🎯</div>
+        <div class="rule-text"><strong>Consistência > intensidade.</strong> 3h todo dia vale muito mais que 10h num fim de semana e nada durante a semana.</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end container -->
+
+<script>
+  // Toggle phase
+  function togglePhase(header) {
+    const card = header.parentElement;
+    card.classList.toggle('open');
+  }
+
+  // Filter phases
+  function filterPhase(phase) {
+    document.querySelectorAll('.phase-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+    document.querySelectorAll('.phase-card').forEach(card => {
+      if (phase === 'all' || card.dataset.phase === phase) {
+        card.style.display = '';
+        if (phase !== 'all') card.classList.add('open');
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+
+  // Cronograma
+  const phases = [
+    { label: 'F1 · Linux', dur: 2, color: '#00d4ff' },
+    { label: 'F2 · Python & Git', dur: 2, color: '#7c3aed' },
+    { label: 'F3 · Docker', dur: 2, color: '#10b981' },
+    { label: 'F4 · AWS Cloud', dur: 2, color: '#f59e0b' },
+    { label: 'F5 · DevOps Pro', dur: 12, color: '#ef4444' },
+  ];
+
+  const certs = [
+    { label: '🏆 AWS', atMonth: 8 },
+    { label: '🏆 Terraform', atMonth: 14 },
+    { label: '🏆 CKA', atMonth: 20 },
+  ];
+
+  function updateCrono() {
+    const horas = parseInt(document.getElementById('horasRange').value);
+    const dias = parseInt(document.getElementById('diasRange').value);
+    document.getElementById('horasVal').textContent = horas + 'h';
+    document.getElementById('diasVal').textContent = dias + ' dias';
+
+    const hSemanais = horas * dias;
+    const hTotal = 540;
+    const semanas = hTotal / hSemanais;
+    const meses = Math.ceil(semanas / 4.3);
+    const cert1 = Math.ceil((2 + 2 + 2 + 2) * (18 / hSemanais));
+
+    document.getElementById('totalMeses').textContent = meses;
+    document.getElementById('totalHoras').textContent = hTotal + 'h';
+    document.getElementById('cert1Mes').textContent = 'mês ' + Math.max(4, Math.ceil(8 * 18 / hSemanais));
+
+    // Scale phases
+    const totalMonths = Math.max(meses, 10);
+    const scale = 18 / hSemanais;
+
+    renderTimeline(totalMonths, scale);
+  }
+
+  function renderTimeline(totalMonths, scale) {
+    const tl = document.getElementById('timeline');
+    let html = '';
+
+    // Month headers
+    html += '<div class="tl-months">';
+    for (let i = 1; i <= Math.min(totalMonths, 24); i++) {
+      html += `<div class="tl-month">M${i}</div>`;
+    }
+    html += '</div>';
+
+    // Phase bars
+    let cursor = 0;
+    phases.forEach(ph => {
+      const dur = Math.ceil(ph.dur * scale);
+      const leftPct = (cursor / Math.min(totalMonths, 24)) * 100;
+      const widthPct = (dur / Math.min(totalMonths, 24)) * 100;
+      html += `
+        <div class="tl-row">
+          <div class="tl-label">${ph.label}</div>
+          <div class="tl-track">
+            <div class="tl-bar" style="left:${leftPct}%;width:${widthPct}%;background:${ph.color}">
+              ${dur}m
+            </div>
+          </div>
+        </div>`;
+      cursor += dur;
+    });
+
+    // Cert markers
+    html += '<div class="tl-row" style="margin-top:0.75rem">';
+    html += '<div class="tl-label" style="font-size:0.65rem;color:var(--muted)">Certificações</div>';
+    html += '<div class="tl-track" style="background:transparent">';
+    certs.forEach(c => {
+      const m = Math.ceil(c.atMonth * scale);
+      const leftPct = (m / Math.min(totalMonths, 24)) * 100;
+      if (leftPct <= 105) {
+        html += `<div class="cert-marker" style="left:${leftPct}%" title="${c.label}">${c.label}</div>`;
+      }
+    });
+    html += '</div></div>';
+
+    tl.innerHTML = html;
+  }
+
+  // Init
+  updateCrono();
+</script>
+</body>
+</html>
